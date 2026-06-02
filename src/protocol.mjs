@@ -1,12 +1,11 @@
 // Plexus protocol — the shared vocabulary for the collaboration layer.
 //
-// Design grounded in 2026 state-of-the-art:
+// Design:
 //  - Two-layer interop stack: MCP (vertical, agent<->tool) + A2A (horizontal,
-//    agent<->agent). See https://a2a-protocol.org and arXiv:2601.11595.
+//    agent<->agent).
 //  - A Room is a Shared Context Store (SCS): one transcript + scoped memory that
 //    every participant reads/writes, instead of N context-isolated threads.
-//    See arXiv:2601.11595 (MCP shared context) and arXiv:2507.10562 (SAMEP).
-//  - Memory is a scoped write->manage->read loop. See survey arXiv:2603.07670.
+//  - Memory is a scoped write->manage->read loop.
 //
 // Pure data + helpers. No I/O here. Zero dependencies by design.
 

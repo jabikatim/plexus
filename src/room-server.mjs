@@ -1,6 +1,6 @@
-// Plexus Room service — the runtime the 2026 literature calls a Shared Context
-// Store. One transcript + scoped memory +
-// an event bus, shared by humans and agents. Zero dependencies (node:http only).
+// Plexus Room service — the Shared Context Store runtime: one transcript +
+// scoped memory + an event bus, shared by humans and agents. Zero dependencies
+// (node:http only).
 //
 // This is intentionally an in-memory single-process reference implementation:
 // small enough to read in one sitting, faithful enough to demonstrate the model.
@@ -66,7 +66,7 @@ function post(room, { memberId, content, replyTo = null, meta = {} }) {
   return msg;
 }
 
-// Memory: the scoped write->manage->read loop (arXiv:2603.07670).
+// Memory: the scoped write->manage->read loop.
 function memKey(room, scope, { memberId, userId }) {
   switch (scope) {
     case Scope.HUB: return { store: hubMemory, prefix: `${room.hubId}:` };

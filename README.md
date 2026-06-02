@@ -13,19 +13,18 @@ one event bus — instead of N context-isolated threads that can't see each othe
 
 LLM agent tooling in 2026 is excellent at two layers and silent on a third:
 
-- **Vertical integration (agent ↔ tool)** is solved by **MCP** — 200+ servers,
-  the de-facto standard.
-- **Horizontal coordination (agent ↔ agent)** is converging on **A2A** (Linux
-  Foundation, 150+ orgs): Agent Cards, task delegation across vendors.
-- **Shared context (who-sees-what, collective memory)** has no standard. The
-  Claude Agent SDK runs every subagent in its *own context-isolated session
-  thread*; LangGraph/CrewAI pass messages but don't define a shared, governed,
-  durable conversation substrate.
+- **Vertical integration (agent ↔ tool)** is solved by **MCP**, the de-facto
+  standard for connecting agents to tools.
+- **Horizontal coordination (agent ↔ agent)** is converging on **A2A**: Agent
+  Cards and task delegation across vendors.
+- **Shared context (who-sees-what, collective memory)** has no standard. Agent
+  SDKs run every subagent in its *own context-isolated session thread*; message
+  passing alone doesn't define a shared, governed, durable conversation
+  substrate.
 
-The 2026 research points the same direction the production stack does: a
-**Shared Context Store** reduces redundancy and enables knowledge transfer across
-agents (arXiv:2601.11595, SAMEP arXiv:2507.10562), and agent memory is best
-modeled as a **scoped write→manage→read loop** (survey arXiv:2603.07670).
+A **Shared Context Store** reduces redundancy and enables knowledge transfer
+across agents, and agent memory is best modeled as a **scoped
+write→manage→read loop**.
 
 **Plexus is that missing third layer, built for Claude Code.** It contributes one
 primitive — the **Room** — and wires the existing two layers (MCP, A2A) and
@@ -39,13 +38,13 @@ and the stub brains for the Claude Agent SDK; the protocol does not change.
 
 ## The model — five concepts
 
-| Plexus | What it is | Grounded in / built on |
+| Plexus | What it is | Built on |
 | --- | --- | --- |
 | **Hub** | Governance + access boundary; owns rooms and the broadest memory scope. | org/workspace boundary |
-| **Room** | The shared runtime: one transcript + scoped memory + event bus. **The one new primitive.** | Shared Context Store — arXiv:2601.11595, 2507.10562 |
+| **Room** | The shared runtime: one transcript + scoped memory + event bus. **The one new primitive.** | Shared Context Store |
 | **Member** | A participant: `human`, `native` (a Claude Agent SDK subagent), or `bridged` (external agent over A2A). | Claude Agent SDK subagents; A2A |
 | **Capability** | A grant: `mcp` (tool), `a2a` (peer agent), `skill`, `event_source`. Access is grant-based. | MCP + A2A two-layer stack |
-| **Memory** | Scoped write→manage→read loop: `hub` ⊃ `room` ⊃ `member` ⊃ `user`. Reads resolve narrow→broad. | memory survey arXiv:2603.07670; CLAUDE.md scoped memory |
+| **Memory** | Scoped write→manage→read loop: `hub` ⊃ `room` ⊃ `member` ⊃ `user`. Reads resolve narrow→broad. | Claude Code scoped file-memory |
 | **Wakeup** | An external event (webhook/cron) that wakes a Room. | Claude Code `/schedule`, hooks |
 
 ## What Plexus is *not* (and reuses instead)
@@ -103,14 +102,6 @@ docs/ARCHITECTURE.md   protocol, data model, scope lattice, scaling path
   conversation — and stays embeddable rather than becoming a product to adopt.
 - **Native MCP + A2A.** The two-layer interop stack is built in: tools via MCP,
   agent-to-agent delegation via A2A.
-- **Memory as a scoped write→manage→read loop**, following the 2026 literature.
+- **Memory as a scoped write→manage→read loop.**
 - **Built for Claude Code.** Its subagents are the native members, its scoped
   file-memory is the memory backend, and its `/schedule` is the wakeup source.
-
-## Sources
-
-- A2A protocol — https://a2a-protocol.org/latest/ ; Linux Foundation milestone (PRNewswire, 2026)
-- Interop convergence (MCP/A2A/ACP) — https://zylos.ai/research/2026-03-26-agent-interoperability-protocols-mcp-a2a-acp-convergence
-- Shared context for MCP — arXiv:2601.11595 ; SAMEP — arXiv:2507.10562
-- Agent memory survey — arXiv:2603.07670 ; human-inspired memory — arXiv:2605.08538
-- Claude Agent SDK — https://code.claude.com/docs/en/agent-sdk/overview

@@ -9,9 +9,9 @@ Three layers make an agent system. Two have standards; one doesn't.
   │  L3  SHARED CONTEXT   ← Plexus adds this (the Room)            │
   │      one transcript · scoped memory · event bus · governance  │
   ├──────────────────────────────────────────────────────────────┤
-  │  L2  AGENT ↔ AGENT    ← A2A (Linux Foundation): delegation     │
+  │  L2  AGENT ↔ AGENT    ← A2A: delegation across agents          │
   ├──────────────────────────────────────────────────────────────┤
-  │  L1  AGENT ↔ TOOL     ← MCP (Anthropic): 200+ servers          │
+  │  L1  AGENT ↔ TOOL     ← MCP: agent-to-tool connectivity        │
   └──────────────────────────────────────────────────────────────┘
 ```
 
@@ -43,8 +43,7 @@ client passes `?since=` to replay what it missed.
 
 ## Memory: the scoped write→manage→read loop
 
-Following the 2026 survey (arXiv:2603.07670), memory is not a blob — it's a loop
-with an explicit **scope lattice**:
+Memory is not a blob — it's a loop with an explicit **scope lattice**:
 
 ```
 hub      (broadest)   shared across all rooms in a hub        — org knowledge
@@ -57,10 +56,10 @@ hub      (broadest)   shared across all rooms in a hub        — org knowledge
 - **Read** resolves **narrow→broad**: a `member`-scope read returns the member's
   own key if present, else falls back to `room`, else `hub`. So a private note
   *shadows* a room default — the visibility precedence in `visibleScopes()`.
-- **Manage** (consolidation/forgetting — the survey's third verb) is where the
-  human-inspired mechanisms (arXiv:2605.08538: sleep-phase consolidation,
-  interference forgetting) would live. Out of scope for the reference impl;
-  the seam is `writeMemory`/`readMemory` in `room-server.mjs`.
+- **Manage** (consolidation/forgetting) is where memory-maintenance mechanisms —
+  periodic consolidation, interference-based forgetting — would live. Out of
+  scope for the reference impl; the seam is `writeMemory`/`readMemory` in
+  `room-server.mjs`.
 
 **Handoff** is just a write at a broader scope: the demo promotes a room-scope
 hypothesis to hub-scope so the next incident room inherits it.
