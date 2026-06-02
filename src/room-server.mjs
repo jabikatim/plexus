@@ -1,5 +1,5 @@
-// Plexus Room service — the runtime that Synapse calls a "conversation" and the
-// 2026 literature calls a Shared Context Store. One transcript + scoped memory +
+// Plexus Room service — the runtime the 2026 literature calls a Shared Context
+// Store. One transcript + scoped memory +
 // an event bus, shared by humans and agents. Zero dependencies (node:http only).
 //
 // This is intentionally an in-memory single-process reference implementation:
@@ -93,8 +93,8 @@ function readMemory(room, { scope, key, memberId, userId }) {
   return null;
 }
 
-// Wakeup: an external event (webhook/cron) wakes the room. The Synapse "event
-// source" idea, expressed as a first-class bus event + a system transcript line.
+// Wakeup: an external event (webhook/cron) wakes the room, expressed as a
+// first-class bus event plus a system transcript line.
 function wakeup(room, { source, payload }) {
   emit(room, Event.WAKEUP, { source, payload });
   return post(room, {

@@ -79,7 +79,7 @@ const human = await PlexusClient.join(BASE, roomId, { name: 'pjab', role: Role.H
 
 console.log(`\n=== incident-#1421 — shared room (every line below is one transcript) ===\n`);
 
-// --- the trigger: a webhook wakes the room (Synapse "event source") ----------
+// --- the trigger: a webhook wakes the room (an external event source) --------
 await human.wakeup('github', { service: 'checkout-api', error: 'HTTP 500 after deploy d4f1a' });
 await sleep(250);
 await human.post('what broke?');

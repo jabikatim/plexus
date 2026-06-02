@@ -4,8 +4,8 @@
 Humans and agents meet in a *Room* — one shared transcript, one scoped memory,
 one event bus — instead of N context-isolated threads that can't see each other.
 
-> *plexus* (n.) — an interwoven network of nerves or vessels. Where Synapse names
-> a single junction, a plexus is the mesh: many participants, one shared context.
+> *plexus* (n.) — an interwoven network of nerves or vessels. The mesh, not the
+> junction: many participants, one shared context.
 
 ---
 
@@ -97,15 +97,15 @@ examples/incident-room.mjs   runnable end-to-end demo
 docs/ARCHITECTURE.md   protocol, data model, scope lattice, scaling path
 ```
 
-## How this differs from Synapse
+## Design principles
 
-Synapse (zai-org) is a self-hosted, conversation-centric AI *workspace product*.
-Plexus extracts the one idea worth standardizing — the governed shared
-conversation — reframes it as a **layer** rather than an app, makes the
-**MCP + A2A** two-layer stack native, models memory as the literature's
-**scoped write→manage→read loop**, and targets **Claude Code** specifically (its
-subagents are the native members; its file-memory is the memory backend; its
-`/schedule` is the wakeup source). Smaller surface, sharper thesis, embeddable.
+- **A layer, not an app.** Plexus standardizes one thing — the governed shared
+  conversation — and stays embeddable rather than becoming a product to adopt.
+- **Native MCP + A2A.** The two-layer interop stack is built in: tools via MCP,
+  agent-to-agent delegation via A2A.
+- **Memory as a scoped write→manage→read loop**, following the 2026 literature.
+- **Built for Claude Code.** Its subagents are the native members, its scoped
+  file-memory is the memory backend, and its `/schedule` is the wakeup source.
 
 ## Sources
 
