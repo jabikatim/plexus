@@ -36,6 +36,67 @@ plus a runnable demo. It is small enough to read in one sitting and faithful
 enough to show the model end-to-end. Swap the in-memory store for Postgres/Redis
 and the stub brains for the Claude Agent SDK; the protocol does not change.
 
+## Architecture
+
+```mermaid
+flowchart TB
+  subgraph PART["Participants — Members"]
+    direction LR
+    H["👤 Human<br/>CLI / web / IM"]
+    N["🤖 Native agent<br/>PlexusAgent + brain"]
+    B["💻 Bridged agent<br/>external, over A2A"]
+  end
+
+  subgraph SDK["Client SDK — client.mjs"]
+    PC["PlexusClient<br/>join · post · delegate<br/>remember · recall · subscribe"]
+  end
+
+  H --> PC
+  N --> PC
+  B --> PC
+
+  subgraph ROOM["Room Service — room-server.mjs"]
+    API["HTTP API + Router"]
+    AUTH["Auth — per-member bearer token"]
+    TR["Transcript — single shared log + seq"]
+    BUS["Event Bus — SSE fan-out, resumable"]
+    subgraph MEM["Scoped Memory — write→manage→read"]
+      direction LR
+      HUBM["hub"]
+      ROOMM["room"]
+      MEMM["member"]
+      USERM["user"]
+    end
+  end
+
+  PC -->|HTTP /messages /memory /delegate /wakeups| API
+  PC -->|SSE /stream| BUS
+  API --> AUTH
+  API --> TR
+  API --> MEM
+  TR --> BUS
+  MEM --> BUS
+
+  subgraph CAP["Capability grants — access control"]
+    direction LR
+    MCP["MCP servers — tools · L1"]
+    A2APEER["A2A peers — agents · L2"]
+    SK["Skills"]
+    ES["Event sources — webhook / cron"]
+  end
+
+  N -.->|grant mcp| MCP
+  N -.->|grant a2a| A2APEER
+  B -.->|joins via| A2APEER
+  ES ==>|wakeup| API
+
+  classDef store fill:#eef,stroke:#88a;
+  class HUBM,ROOMM,MEMM,USERM store;
+```
+
+More views — three-layer thesis, memory scope lattice, runtime sequence, member
+lifecycle — in [`docs/architecture-diagram.md`](docs/architecture-diagram.md).
+
 ## The model — five concepts
 
 | Plexus | What it is | Built on |
