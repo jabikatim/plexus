@@ -1,0 +1,13 @@
+{
+  "name": "plexus",
+  "version": "0.1.0",
+  "description": "A shared-context collaboration layer for Claude Code agents — humans and agents meet in one Room (a Shared Context Store) instead of N isolated threads.",
+  "type": "module",
+  "license": "MIT",
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "serve": "node src/room-server.mjs",
+    "demo": "node examples/incident-room.mjs"
+  },
+  "keywords": ["claude-code", "multi-agent", "a2a", "mcp", "shared-context", "agents"]
+}
